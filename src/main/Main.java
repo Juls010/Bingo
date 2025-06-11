@@ -1,27 +1,20 @@
 package main;
+import model.Drum;
 
-
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
-
-public class Main extends Application {
-    @Override
-    public void start(Stage primaryStage) {
-        Label etiqueta = new Label("¡Hola, Bingo!");
-        StackPane root = new StackPane();
-        root.getChildren().add(etiqueta);
-        
-        Scene escena = new Scene(root, 400, 200);
-        primaryStage.setTitle("Prueba JavaFX");
-        primaryStage.setScene(escena);
-        primaryStage.show();
-    }
-
+public class Main {
     public static void main(String[] args) {
-        launch(args);
+        Drum drum = new Drum();
+        
+
+        for (int i = 0; i < 95; i++) { // Intentamos sacar más de 90 bolas
+            Integer ball = drum.drawBall();
+            if (ball == null) {
+                System.out.println("All balls have been drawn. The game is over!");
+                break;
+            } else {
+                System.out.println("New ball: " + ball);
+            }
+        }
     }
 }
 
