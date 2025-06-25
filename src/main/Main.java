@@ -10,8 +10,7 @@ public class Main {
         	System.out.println("New ball: " + ball);
         }
         System.out.println("Alls balls have been drawn. The game is over!");
-        
-        
+          
     }
 }
 
