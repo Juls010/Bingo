@@ -26,7 +26,7 @@ public class SplashScreen extends Application {
 	
 	root.getChildren().add(logoView);
 	
-	Scene scene = new Scene(root, 600, 400);
+	Scene scene = new Scene(root, 800, 500);
 	scene.setFill(Color.BLACK);
 	splashStage.initStyle(StageStyle.UNDECORATED);
 	splashStage.setScene(scene);
