@@ -25,6 +25,14 @@ public class Drum {
 		
 	}
 	
+	public List<Integer> getLastBalls(int count) {
+		int size = drawnBalls.size();
+		if (size <= count) {
+			return new ArrayList<>(drawnBalls);
+		}
+		return drawnBalls.subList(size - count, size);
+	}
+	
 	public Integer drawBall() {
 		if(availableBalls.isEmpty()) {
 			return null;
