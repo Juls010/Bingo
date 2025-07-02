@@ -1,0 +1,51 @@
+/* Estilo del panel de bienvenida */
+.welcome-pane {
+    -fx-background-color: white;
+    -fx-padding: 40;
+}
+
+/* Estilo del panel de juego */
+.game-pane {
+    -fx-background-color: white;
+    -fx-padding: 40;
+}
+
+/* Etiqueta del título */
+.welcome-label {
+    -fx-text-fill: #333;
+}
+
+/* Estilo del Grid de historial */
+.history-grid {
+    -fx-padding: 20;
+    -fx-background-color: #f0f0f0;
+}
+
+/* Estilo de bola marcada */
+.history-ball-marked {
+    -fx-border-color: black;
+    -fx-alignment: center;
+    -fx-background-color: lightgreen;
+    -fx-font-weight: bold;
+}
+
+/* Bola no marcada */
+.history-ball-default {
+    -fx-border-color: gray;
+    -fx-alignment: center;
+    -fx-background-color: white;
+}
+
+/* Estilo de bolas grandes */
+.last-ball-label {
+    -fx-border-color: black;
+    -fx-border-width: 2;
+    -fx-background-color: white;
+    -fx-alignment: center;
+}
+
+/* Bola recién salida */
+.last-ball-active {
+    -fx-background-color: lightblue;
+}
+

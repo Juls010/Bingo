@@ -46,7 +46,6 @@ public class MainWindow  extends Application {
 	
 	private Drum drum = new Drum();
 	
-	private javafx.animation.PauseTransition pause;
 	
 	
 	@Override
@@ -56,12 +55,16 @@ public class MainWindow  extends Application {
 		createHistoryGrid();
 		createLastBallsDisplay();
 		createGamePane();
-		configureEventHandlers();
-		
+		EventHandlerManager handler = new EventHandlerManager(this,drum, ballLabel, welcomePane, gamePane, startButton, stopButton, resetButton,
+				lastBallsLabels, ballLabelsMap, lastBallsBox, historyGrid);
+		handler.configureAll();
+
 		VBox root = new VBox();
 		root.getChildren().addAll(welcomePane, gamePane);
 		
 		Scene scene = new Scene(root, 1400, 900);
+		scene.getStylesheets().add(getClass().getResource("/style/styles.css").toExternalForm());
+
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Bingo Machine");
 		primaryStage.show();	
@@ -71,14 +74,14 @@ public class MainWindow  extends Application {
 		
 		Label welcomeLabel = new Label("Welcome to Bingo!");
 		welcomeLabel.setFont(new Font("Arial", 36));
-		welcomeLabel.setStyle("-fx-text-fill: #333;");
+		welcomeLabel.getStyleClass().add("welcome-label");
 		
 		startButton = new Button("Start");
 		startButton.setFont(new Font(18));
 		
 		welcomePane = new VBox(20, welcomeLabel, startButton);
 		welcomePane.setAlignment(javafx.geometry.Pos.CENTER);
-		welcomePane.setStyle("-fx-background-color: white; -fx-padding: 40;");
+		welcomePane.getStyleClass().add("welcome-label");
 	}
 	
 	private void createGamePane() {
@@ -94,67 +97,24 @@ public class MainWindow  extends Application {
 		
 		gamePane = new VBox(20, lastBallsBox,ballLabel, stopButton, resetButton, historyGrid);
 		gamePane.setAlignment(javafx.geometry.Pos.CENTER);
-		gamePane.setStyle("-fx-background-color: white; -fx-padding: 40;");
+		gamePane.getStyleClass().add("game-pane");
 		gamePane.setVisible(false);
 	}
 	
-	
-	private void configureEventHandlers() {
-		
-		startButton.setOnAction(e -> {
-			FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), welcomePane);
-			fadeOut.setFromValue(1.0);
-			fadeOut.setToValue(0.0);
-			fadeOut.setOnFinished(event -> {
-				welcomePane.setVisible(false);
-				gamePane.setVisible(true);
-				stopButton.setVisible(true);
-				resetButton.setDisable(false);
-				drawNextBall();
-			});
-			fadeOut.play();
-		});
-
-		stopButton.setOnAction(e -> {
-			if (pause != null && pause.getStatus() == javafx.animation.Animation.Status.RUNNING) {
-				pause.stop();
-				stopButton.setText("Start");
-			} else {
-				drawNextBall();
-				stopButton.setText("Stop");
-			}
-		});
-
-		resetButton.setOnAction(e -> {
-			drum.reset();
-			ballLabel.setText("Waiting...");
-			stopDrawing();
-			
-			stopButton.setVisible(false);
-			stopButton.setText("Stop");
-			resetButton.setDisable(true);
-			
-			gamePane.setVisible(false);
-			welcomePane.setVisible(true);
-			welcomePane.setOpacity(1.0);
-			startButton.setVisible(true);
-			
-		});
-		
-	}
 
 	private void createHistoryGrid() {
 		historyGrid = new GridPane();
 		historyGrid.setHgap(GAP_SIZE);
 		historyGrid.setVgap(GAP_SIZE);
 		historyGrid.setAlignment(Pos.CENTER);
-		historyGrid.setStyle("-fx-padding: 20; -fx-background-color: #f0f0f0;");
+		historyGrid.getStyleClass().add("history-grid");
 		
 		
 		
 		for(int i = 1; i <= TOTAL_BALLS; i++) {
 			Label ballLabel = new Label(String.valueOf(i));
 			ballLabel.setMinSize(BALL_SIZE, BALL_SIZE);
+			ballLabel.getStyleClass().add("history-ball-default");
 			ballLabelsMap.put(i, ballLabel);
 			
 			int col = getColumn(i);
@@ -164,10 +124,11 @@ public class MainWindow  extends Application {
 		}
 	}
 	
-	private void markBallAsDrawn(int ballNumber) {
+	public void markBallAsDrawn(int ballNumber) {
 		Label label = ballLabelsMap.get(ballNumber);
 		if (label != null) {
-			label.setStyle("-fx-border-color: black; -fx-alignment: center; -fx-background-color: lightgreen; -fx-font-weight: bold;");
+			label.getStyleClass().clear();
+			label.getStyleClass().add("history-ball-marked");
 		}
 	}
 	
@@ -180,8 +141,8 @@ public class MainWindow  extends Application {
 		for (int i = 0; i < LAST_BALLS_DISPLAY_COUNT; i++) {
 			Label label = new Label("-");
 			label.setMinSize(50, 50);
-			label.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-background-color: white; -fx-alignment: center;");
 			label.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+			label.getStyleClass().add("last-ball-label");
 			lastBallsLabels.add(label);
 			lastBallsBox.getChildren().add(label);
 		}
@@ -189,55 +150,15 @@ public class MainWindow  extends Application {
 	}
 	
 	
-	private void updateLastBallsDisplay() {
-		List<Integer> lastBalls = drum.getLastBalls(LAST_BALLS_DISPLAY_COUNT);
-		
-		for (int i = 0; i < LAST_BALLS_DISPLAY_COUNT; i++) {
-			Label label = lastBallsLabels.get(i);
-			if(i < lastBalls.size()) {
-				label.setText(String.valueOf(lastBalls.get(lastBalls.size()- 1 - i)));
-				label.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-background-color: lightblue; -fx-alignment: center;");
-			}else {
-				label.setText("-");
-				label.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-background-color: white; -fx-alignment: center;");
-			}
-		}
-	}
-	
-	
-	private void drawNextBall() {
-		
-		if(!drum.hasBallsLeft()) {
-			ballLabel.setText("¡Game Over! T-T");
-			return;
-		}
-		
-		Integer ball = drum.drawBall();
-		ballLabel.setText("Ball: " + ball);
-		markBallAsDrawn(ball);
-		updateLastBallsDisplay();
-		
-		pause = new PauseTransition(Duration.seconds(3));
-		pause.setOnFinished(e -> drawNextBall());
-		pause.play();
-		
-	}
-	
 	private int getRow(int ballNumber) {
 		return (ballNumber - 1) / COLUMNS;
 	}
 
+	
 	private int getColumn(int ballNumber) {
 		return (ballNumber - 1) % COLUMNS;
 	}
 
-	
-	
-	private void stopDrawing() {
-		if (pause != null) {
-			pause.stop();
-		}
-	}
 	
 	public static void main (String [] args) {
 		launch(args);
