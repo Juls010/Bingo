@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import model.Drum;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import java.util.List;
@@ -18,7 +19,7 @@ public class EventHandlerManager {
     private final Drum drum;
     private final Label ballLabel;
     private final VBox welcomePane;
-    private final VBox gamePane;
+    private final BorderPane gamePane;
     private final Button startButton;
     private final Button stopButton;
     private final Button resetButton;
@@ -32,7 +33,7 @@ public class EventHandlerManager {
     	Drum drum,
         Label ballLabel,
         VBox welcomePane,
-        VBox gamePane,
+        BorderPane gamePane,
         Button startButton,
         Button stopButton,
         Button resetButton,
@@ -53,7 +54,8 @@ public class EventHandlerManager {
         this.ballLabelsMap = ballLabelsMap;
     }
 
-    public void configureAll() {
+   
+	public void configureAll() {
         configureStartButton();
         configureStopButton();
         configureResetButton();
@@ -120,7 +122,7 @@ public class EventHandlerManager {
         }
 
         Integer ball = drum.drawBall();
-        ballLabel.setText("Ball: " + ball);
+        ballLabel.setText("" + ball);
         mainWindow.markBallAsDrawn(ball);
         
         List<Integer> lastBalls = drum.getLastBalls(3);
