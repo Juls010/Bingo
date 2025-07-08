@@ -179,14 +179,18 @@ public class MainWindow extends Application {
 		lastBallsBox = new HBox(10);
 		lastBallsBox.setAlignment(Pos.TOP_LEFT);
 		lastBallsBox.setPadding(new Insets(10, 0, 0, 10));
-
+		lastBallsBox.getStyleClass().add("last-balls-container");
+		
 		for (int i = 0; i < LAST_BALLS_DISPLAY_COUNT; i++) {
 			Label label = new Label("-");
-			label.setMinSize(50, 50);
+			label.setMinSize(40, 40);
+			label.setPrefSize(40, 40);
+			label.setMaxSize(40, 40);
 			label.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 			label.getStyleClass().add("last-ball-label");
 			lastBallsLabels.add(label);
 			lastBallsBox.getChildren().add(label);
+		
 		}
 
 	}
