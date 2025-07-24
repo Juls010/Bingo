@@ -17,7 +17,7 @@ public class Drum {
 	
 	public void reset() {
 		availableBalls = new ArrayList<>();
-		for(int i = 1; i < MAX_BALL_NUMBER; i++) {
+		for(int i = 1; i <= MAX_BALL_NUMBER; i++) {
 			availableBalls.add(i);
 		}
 		Collections.shuffle(availableBalls);

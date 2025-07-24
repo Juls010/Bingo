@@ -69,10 +69,10 @@ public class EventHandlerManager {
 		stopButton.setOnAction(e -> {
 			if (pause != null && pause.getStatus() == javafx.animation.Animation.Status.RUNNING) {
 				pause.stop();
-				stopButton.setText("Start");
+				stopButton.setText("START");
 			} else {
 				drawNextBall();
-				stopButton.setText("Stop");
+				stopButton.setText("STOP");
 			}
 		});
 	}
@@ -84,7 +84,7 @@ public class EventHandlerManager {
 			stopDrawing();
 
 			stopButton.setVisible(false);
-			stopButton.setText("Stop");
+			stopButton.setText("STOP");
 			resetButton.setDisable(true);
 
 			gamePane.setVisible(false);
@@ -104,12 +104,11 @@ public class EventHandlerManager {
 	}
 
 	private void drawNextBall() {
-
+		
 		if (!drum.hasBallsLeft()) {
-			ballLabel.setText("¡Game Over! T-T");
+			mainWindow.showGameEndModal();
 			return;
 		}
-
 		Integer ball = drum.drawBall(); 
 		ballLabel.setText(String.valueOf(ball));
 		mainWindow.markBallAsDrawn(ball); 
@@ -141,6 +140,8 @@ public class EventHandlerManager {
 		pause = new PauseTransition(Duration.seconds(3));
 		pause.setOnFinished(e -> drawNextBall());
 		pause.play();
+		
+		
 
 	}
 
