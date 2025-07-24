@@ -69,11 +69,11 @@ public class MainWindow extends Application {
 		createLastBallsDisplay();
 		createGamePane();
 		
-		// NUEVO: Contenedor principal con fondo
+		
 	    StackPane appContainer = new StackPane();
 	    appContainer.getStyleClass().add("app-container");
 	    
-	    // NUEVO: Contenedor de las pantallas
+	    
 	    screenContainer = new StackPane();
 	    screenContainer.getStyleClass().add("screen-container");
 	    
@@ -83,10 +83,8 @@ public class MainWindow extends Application {
 				stopButton, resetButton, lastBallsLabels, ballLabelsMap, lastBallsBox, historyGrid);
 		handler.configureAll();
 		
-	    // Agregar los paneles al contenedor de pantallas
 	    screenContainer.getChildren().addAll(welcomePane, gamePane);
 	    
-	    // Agregar el contenedor de pantallas al contenedor principal
 	    appContainer.getChildren().addAll(screenContainer,gameEndModal);
 
 	    appContainer.setPrefSize(1400, 900);
@@ -141,17 +139,6 @@ public class MainWindow extends Application {
 		});
 	}
 	
-	public void generarCartones(int quantity) {
-	    for (int i = 0; i < quantity; i++) {
-	        Card card = Card.generateCard();
-	        String route = "card_" + (i + 1) + ".pdf";
-	        card.exportPdf(route);
-	    }
-
-	    System.out.println("Se han generado " + quantity + " cartones en PDF.");
-	}
-
-	
 	private void showError(String error) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setTitle("ERROR");
@@ -159,7 +146,6 @@ public class MainWindow extends Application {
 		alert.showAndWait();
 	}
 	
-
 	private void createGamePane() {
 
 		ballLabel = new Label("Waiting...");
@@ -259,13 +245,13 @@ public class MainWindow extends Application {
 	}
 	
 	private void createGameEndModal() {
-		// Crear el overlay de fondo semitransparente
+		
 		Rectangle overlay = new Rectangle();
-		overlay.setFill(Color.rgb(0, 0, 0, 0.5)); // Negro con 70% de opacidad
+		overlay.setFill(Color.rgb(0, 0, 0, 0.5)); 
 		overlay.widthProperty().bind(screenContainer.widthProperty());
 		overlay.heightProperty().bind(screenContainer.heightProperty());
 		
-		// Crear el contenido del modal
+		
 		Label gameEndLabel = new Label("¡GAME COMPLETE!");
 		gameEndLabel.getStyleClass().add("game-end-title");
 		
@@ -281,7 +267,7 @@ public class MainWindow extends Application {
 			resetButton.fire();
 		});
 		
-		// Contenedor del contenido del modal
+		
 		VBox modalContent = new VBox(25);
 		modalContent.getChildren().addAll(gameEndLabel, newGameButton);
 		modalContent.setAlignment(Pos.CENTER);
@@ -290,24 +276,23 @@ public class MainWindow extends Application {
 		modalContent.setMaxHeight(400);
 		modalContent.setPadding(new Insets(40, 50, 50, 50));
 		
-		// Contenedor principal del modal
 		gameEndModal = new StackPane();
 		gameEndModal.getChildren().addAll(overlay, modalContent);
 		gameEndModal.setAlignment(Pos.CENTER);
-		gameEndModal.setVisible(false); // Inicialmente oculto
-		gameEndModal.setManaged(false); // No ocupa espacio cuando está oculto
+		gameEndModal.setVisible(false); 
+		gameEndModal.setManaged(false); 
 	}
 	
 	public void showGameEndModal() {
-		// Aplicar efecto de difuminado al fondo
+		
 		GaussianBlur blur = new GaussianBlur(10);
 		screenContainer.setEffect(blur);
 		
-		// Mostrar el modal con animación
+		
 		gameEndModal.setVisible(true);
 		gameEndModal.setManaged(true);
 		gameEndModal.setOpacity(0);
-		gameEndModal.setScaleX(0.8); // Efecto de escala inicial
+		gameEndModal.setScaleX(0.8); 
 		gameEndModal.setScaleY(0.8);
 		
 		FadeTransition fadeIn = new FadeTransition(Duration.millis(300), gameEndModal);
@@ -320,16 +305,16 @@ public class MainWindow extends Application {
 		scaleIn.setToY(1.0);
 		scaleIn.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
 		
-		// Ejecutar ambas animaciones al mismo tiempo
+		
 		javafx.animation.ParallelTransition parallelTransition = new javafx.animation.ParallelTransition(fadeIn, scaleIn);
 		parallelTransition.play();
 	}
 	
 	public void hideGameEndModal() {
-		// Quitar el efecto de difuminado
+		
 		screenContainer.setEffect(null);
 		
-		// Ocultar el modal con animación
+		
 		FadeTransition fadeOut = new FadeTransition(Duration.millis(300), gameEndModal);
 		fadeOut.setFromValue(1);
 		fadeOut.setToValue(0);
